@@ -29,7 +29,7 @@ while len(tokens) > 0 :
 while len(opStack) > 0 :
     postfix.append(opStack.pop(0))
 
-print postfix
+# print postfix
 
 
 stack = []
@@ -46,5 +46,23 @@ while len(postfix) > 0:
         stack.insert(0, [op1, op2, postfix[0]])
         postfix.pop(0)
 
-print stack
+parseTree = stack[0]
 
+def rmImp(logic):
+    if isinstance(logic, str):
+        ans = logic
+    else:
+        op = logic[-1]
+        if op == 'not':
+            tree = rmImp(logic[0])
+            ans = [tree, 'not']
+        else:
+            tree1 = rmImp(logic[0])
+            tree2 = rmImp(logic[1])
+            if op == 'imp':
+                ans = [ [tree1, 'not'], tree2, 'or']
+            else:
+                ans = [ tree1, tree2, op ]
+    return ans
+
+print rmImp(parseTree)
