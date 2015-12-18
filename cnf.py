@@ -1,8 +1,11 @@
+import sys
 ops = { 'iff': 1, 'imp': 2, 'or': 3, 'and': 4, 'neg': 5, '(': 0, ')':6 }
 opStack = []
 postfix = []
 
-text = raw_input("input your logic: ")
+fp = open(sys.argv[1], 'r')
+fw = open(sys.argv[2], 'w')
+text = fp.readline()
 text = text.replace('(', ' ( ')
 text = text.replace(')', ' ) ')
 text = text.strip()
@@ -98,12 +101,12 @@ def postfixToInfix(logic):
 parseTree = rmIff(parseTree)
 io = postfixToInfix(parseTree)
 io = io.replace('-', 'neg ')
-print io
+fw.writelines(io+'\n')
 
 parseTree = rmImp(parseTree)
 io = postfixToInfix(parseTree)
 io = io.replace('-', 'neg ')
-print io
+fw.writelines(io+'\n')
 
 
 def moveNegations(logic):
@@ -133,7 +136,7 @@ def moveNegations(logic):
 parseTree = moveNegations(parseTree)
 io = postfixToInfix(parseTree)
 io = io.replace('-', 'neg ')
-print io
+fw.writelines(io+'\n')
 
 def distribute_Or(p1, p2):
     if isinstance(p1, list) and p1[-1] == 'and' :
@@ -182,4 +185,4 @@ for term in parseTree:
     outList.append( '(' + ' or '.join(term) + ')' )
 io = ' and '.join(outList)
 io = io.replace('-', 'neg ')
-print io
+fw.writelines(io+'\n')
