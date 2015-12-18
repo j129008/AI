@@ -86,3 +86,16 @@ parseTree = rmIff(parseTree)
 parseTree = rmImp(parseTree)
 print parseTree
 
+def postfixToInfix(logic):
+    if isinstance(logic, str):
+        ans = logic
+    else:
+        op = logic[-1]
+        if op == 'not':
+            ans = '( not ' + postfixToInfix(logic[0]) + ' )'
+        else:
+            ans = '( ' + postfixToInfix(logic[0]) + ' ' + op + ' ' + postfixToInfix(logic[1]) + ' )'
+    return ans
+
+print postfixToInfix(parseTree)
+
