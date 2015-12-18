@@ -150,3 +150,23 @@ def makeCNF(logic):
 
 parseTree = makeCNF(parseTree)
 print postfixToInfix(parseTree)
+
+def flattenCNF(logic) :
+    def flattenDisjuncts(logic) :
+        if isinstance(logic, str) :
+            ans = [logic]
+        else :  # logic  has form  [OR, p1, p2]
+            ans = flattenDisjuncts(logic[0]) + flattenDisjuncts(logic[1])
+        return ans
+    if isinstance(logic, str) :  # logic is "P" or "-P"
+        ans = [ [logic] ]
+    else :  # logic  has form  [op, p1, p2]
+        op = logic[-1]
+        if op == 'or' :
+            ans = [ flattenDisjuncts(logic[0]) + flattenDisjuncts(logic[1]) ]
+        else : # op == AND
+            ans = flattenCNF(logic[0]) + flattenCNF(logic[1])
+    return ans
+
+parseTree = flattenCNF(parseTree)
+print parseTree
