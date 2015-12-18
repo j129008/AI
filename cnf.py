@@ -99,3 +99,29 @@ def postfixToInfix(logic):
 
 print postfixToInfix(parseTree)
 
+def moveNegations(logic):
+    if isinstance(logic, str):
+        ans = logic
+    else:
+        op = logic[-1]
+        if op == 'not':
+            arg = logic[0]
+            if isinstance(arg, str) :
+                ans = "-" + arg
+            else:
+                innerOp = arg[-1]
+                if innerOp == 'not':
+                    ans = moveNegations(arg[0])
+                else:
+                    tree1 = moveNegations([arg[0], 'not'])
+                    tree2 = moveNegations([arg[1], 'not'])
+                    dual = { 'and': 'or', 'or': 'and' }
+                    ans = [ tree1, tree2, dual[innerOp] ]
+        else:
+            tree1 = moveNegations(logic[0])
+            tree2 = moveNegations(logic[1])
+            ans = [tree1, tree2, op]
+    return ans
+
+parseTree = moveNegations(parseTree)
+print postfixToInfix(parseTree)
