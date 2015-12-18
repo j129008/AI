@@ -1,4 +1,3 @@
-
 ops = { 'iff': 1, 'imp': 2, 'or': 3, 'and': 4, 'not': 5, '(': 0, ')':6 }
 opStack = []
 postfix = []
@@ -31,3 +30,15 @@ while len(opStack) > 0 :
     postfix.append(opStack.pop(0))
 
 print postfix
+
+stack = []
+while len(postfix) > 0:
+    if postfix[0] not in ops:
+        stack = [postfix.pop(0)] + stack
+    else:
+        op2 = stack.pop(0)
+        op1 = stack.pop(0)
+        stack.insert(0, [op1, op2, postfix[0]])
+        postfix.pop(0)
+
+print stack
