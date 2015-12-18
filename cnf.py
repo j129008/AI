@@ -8,15 +8,16 @@ tokens = text.split(" ")
 
 while len(tokens) > 0 :
     token = tokens.pop(0)
-    if len( opStack ) == 0 : # check op stack empty
-        opStack.append(token)
-    elif token == '(':
+    if token == '(':
         opStack = ['('] + opStack
     elif token == ')':
         while opStack[0] != '(' :
             postfix.append(opStack.pop(0))
         opStack.pop(0)
     elif token in ops:
+        if len(opStack) == 0 :
+            opStack = [token] + opStack
+            continue
         while ops[token] <= ops[opStack[0]]:
             postfix.append(opStack.pop(0))
             if len(opStack) == 0 :
