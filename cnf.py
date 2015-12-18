@@ -5,6 +5,7 @@ fp = open(sys.argv[1], 'r')
 fw = open(sys.argv[2], 'w')
 
 for text in fp:
+    fw.writelines(text)
     opStack = []
     postfix = []
 
@@ -67,9 +68,9 @@ for text in fp:
                 tree1 = rmImp(logic[0])
                 tree2 = rmImp(logic[1])
                 if op == 'iff':
-                    ans = [ [tree1, tree2, 'imp'], [tree2, tree1, 'imp'], 'and' ]
+                    ans = [ [rmIff(tree1), rmIff(tree2), 'imp'], [rmIff(tree2), rmIff(tree1), 'imp'], 'and' ]
                 else:
-                    ans = [tree1, tree2, op]
+                    ans = [rmIff(tree1), rmIff(tree2), op]
         return ans
 
     def rmImp(logic):
@@ -187,4 +188,4 @@ for text in fp:
         outList.append( '(' + ' or '.join(term) + ')' )
     io = ' and '.join(outList)
     io = io.replace('-', 'neg ')
-    fw.writelines(io+'\n')
+    fw.writelines(io+'\n\n')
