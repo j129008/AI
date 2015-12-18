@@ -8,7 +8,6 @@ text = text.replace(')', ' ) ')
 text = text.strip()
 while '  ' in text:
     text = text.replace('  ', ' ')
-print text
 tokens = text.split(' ')
 
 while len(tokens) > 0 :
@@ -34,9 +33,6 @@ while len(tokens) > 0 :
 
 while len(opStack) > 0 :
     postfix.append(opStack.pop(0))
-
-# print postfix
-
 
 stack = []
 while len(postfix) > 0:
@@ -88,22 +84,27 @@ def rmImp(logic):
                 ans = [ tree1, tree2, op ]
     return ans
 
-parseTree = rmIff(parseTree)
-parseTree = rmImp(parseTree)
-print parseTree
-
 def postfixToInfix(logic):
     if isinstance(logic, str):
         ans = logic
     else:
         op = logic[-1]
         if op == 'neg':
-            ans = '( not ' + postfixToInfix(logic[0]) + ' )'
+            ans = '( neg ' + postfixToInfix(logic[0]) + ' )'
         else:
             ans = '( ' + postfixToInfix(logic[0]) + ' ' + op + ' ' + postfixToInfix(logic[1]) + ' )'
     return ans
 
-print postfixToInfix(parseTree)
+parseTree = rmIff(parseTree)
+io = postfixToInfix(parseTree)
+io = io.replace('-', 'neg ')
+print io
+
+parseTree = rmImp(parseTree)
+io = postfixToInfix(parseTree)
+io = io.replace('-', 'neg ')
+print io
+
 
 def moveNegations(logic):
     if isinstance(logic, str):
@@ -130,7 +131,9 @@ def moveNegations(logic):
     return ans
 
 parseTree = moveNegations(parseTree)
-print postfixToInfix(parseTree)
+io = postfixToInfix(parseTree)
+io = io.replace('-', 'neg ')
+print io
 
 def distribute_Or(p1, p2):
     if isinstance(p1, list) and p1[-1] == 'and' :
@@ -155,7 +158,6 @@ def makeCNF(logic):
     return ans
 
 parseTree = makeCNF(parseTree)
-print postfixToInfix(parseTree)
 
 def flattenCNF(logic) :
     def flattenDisjuncts(logic) :
@@ -175,4 +177,9 @@ def flattenCNF(logic) :
     return ans
 
 parseTree = flattenCNF(parseTree)
-print parseTree
+outList = []
+for term in parseTree:
+    outList.append( '(' + ' or '.join(term) + ')' )
+io = ' and '.join(outList)
+io = io.replace('-', 'neg ')
+print io
