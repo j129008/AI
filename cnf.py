@@ -3,7 +3,13 @@ opStack = []
 postfix = []
 
 text = raw_input("input your logic: ")
-tokens = text.split(" ")
+text = text.replace('(', ' ( ')
+text = text.replace(')', ' ) ')
+text = text.strip()
+while '  ' in text:
+    text = text.replace('  ', ' ')
+print text
+tokens = text.split(' ')
 
 while len(tokens) > 0 :
     token = tokens.pop(0)
