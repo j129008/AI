@@ -125,3 +125,28 @@ def moveNegations(logic):
 
 parseTree = moveNegations(parseTree)
 print postfixToInfix(parseTree)
+
+def distribute_Or(p1, p2):
+    if isinstance(p1, list) and p1[-1] == 'and' :
+        ans = [distribute_Or(p1[0],p2), distribute_Or(p1[1],p2), 'and']
+    elif  isinstance(p2, list) and p2[-1] == 'and' :
+        ans = [distribute_Or(p1,p2[0]), distribute_Or(p1,p2[1]), 'and']
+    else :
+        ans = [p1, p2, 'or']
+    return ans
+
+def makeCNF(logic):
+    if isinstance(logic, str):
+        ans = logic
+    else:
+        op = logic[-1]
+        tree1 = makeCNF(logic[0])
+        tree2 = makeCNF(logic[1])
+        if op == 'and' :
+            ans = [tree1, tree2, 'and']
+        else :
+            ans = distribute_Or(tree1, tree2)
+    return ans
+
+parseTree = makeCNF(parseTree)
+print postfixToInfix(parseTree)
