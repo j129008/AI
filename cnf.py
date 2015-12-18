@@ -31,10 +31,15 @@ while len(opStack) > 0 :
 
 print postfix
 
+
 stack = []
 while len(postfix) > 0:
     if postfix[0] not in ops:
         stack = [postfix.pop(0)] + stack
+    elif postfix[0] == 'not':
+        op1 = stack.pop(0)
+        stack.insert(0, [op1, postfix[0]])
+        postfix.pop(0)
     else:
         op2 = stack.pop(0)
         op1 = stack.pop(0)
@@ -42,3 +47,4 @@ while len(postfix) > 0:
         postfix.pop(0)
 
 print stack
+
