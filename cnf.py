@@ -1,4 +1,4 @@
-ops = { 'iff': 1, 'imp': 2, 'or': 3, 'and': 4, 'not': 5, '(': 0, ')':6 }
+ops = { 'iff': 1, 'imp': 2, 'or': 3, 'and': 4, 'neg': 5, '(': 0, ')':6 }
 opStack = []
 postfix = []
 
@@ -36,7 +36,7 @@ stack = []
 while len(postfix) > 0:
     if postfix[0] not in ops:
         stack = [postfix.pop(0)] + stack
-    elif postfix[0] == 'not':
+    elif postfix[0] == 'neg':
         op1 = stack.pop(0)
         stack.insert(0, [op1, postfix[0]])
         postfix.pop(0)
@@ -53,9 +53,9 @@ def rmIff(logic):
         ans = logic
     else:
         op = logic[-1]
-        if op == 'not':
+        if op == 'neg':
             tree = rmIff(logic[0])
-            ans = [tree, 'not']
+            ans = [tree, 'neg']
         else:
             tree1 = rmImp(logic[0])
             tree2 = rmImp(logic[1])
@@ -70,14 +70,14 @@ def rmImp(logic):
         ans = logic
     else:
         op = logic[-1]
-        if op == 'not':
+        if op == 'neg':
             tree = rmImp(logic[0])
-            ans = [tree, 'not']
+            ans = [tree, 'neg']
         else:
             tree1 = rmImp(logic[0])
             tree2 = rmImp(logic[1])
             if op == 'imp':
-                ans = [ [tree1, 'not'], tree2, 'or']
+                ans = [ [tree1, 'neg'], tree2, 'or']
             else:
                 ans = [ tree1, tree2, op ]
     return ans
@@ -91,7 +91,7 @@ def postfixToInfix(logic):
         ans = logic
     else:
         op = logic[-1]
-        if op == 'not':
+        if op == 'neg':
             ans = '( not ' + postfixToInfix(logic[0]) + ' )'
         else:
             ans = '( ' + postfixToInfix(logic[0]) + ' ' + op + ' ' + postfixToInfix(logic[1]) + ' )'
@@ -104,17 +104,17 @@ def moveNegations(logic):
         ans = logic
     else:
         op = logic[-1]
-        if op == 'not':
+        if op == 'neg':
             arg = logic[0]
             if isinstance(arg, str) :
                 ans = "-" + arg
             else:
                 innerOp = arg[-1]
-                if innerOp == 'not':
+                if innerOp == 'neg':
                     ans = moveNegations(arg[0])
                 else:
-                    tree1 = moveNegations([arg[0], 'not'])
-                    tree2 = moveNegations([arg[1], 'not'])
+                    tree1 = moveNegations([arg[0], 'neg'])
+                    tree2 = moveNegations([arg[1], 'neg'])
                     dual = { 'and': 'or', 'or': 'and' }
                     ans = [ tree1, tree2, dual[innerOp] ]
         else:
