@@ -48,6 +48,23 @@ while len(postfix) > 0:
 
 parseTree = stack[0]
 
+def rmIff(logic):
+    if isinstance(logic, str):
+        ans = logic
+    else:
+        op = logic[-1]
+        if op == 'not':
+            tree = rmIff(logic[0])
+            ans = [tree, 'not']
+        else:
+            tree1 = rmImp(logic[0])
+            tree2 = rmImp(logic[1])
+            if op == 'iff':
+                ans = [ [tree1, tree2, 'imp'], [tree2, tree1, 'imp'], 'and' ]
+            else:
+                ans = [tree1, tree2, op]
+    return ans
+
 def rmImp(logic):
     if isinstance(logic, str):
         ans = logic
@@ -65,4 +82,7 @@ def rmImp(logic):
                 ans = [ tree1, tree2, op ]
     return ans
 
-print rmImp(parseTree)
+parseTree = rmIff(parseTree)
+parseTree = rmImp(parseTree)
+print parseTree
+
