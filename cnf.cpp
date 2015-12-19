@@ -32,8 +32,8 @@ int main(int argc, char const* argv[]){
     while(getline(in, line)){
         tokens = toToken(line);
         postfix = toPostfix(tokens);
+        printVec(postfix);
     }
-    printVec(postfix);
 
     return 0;
 }
@@ -59,14 +59,35 @@ vector<string> toToken(string line){
 }
 
 vector<string> toPostfix(vector<string> tokens){
+    vector<string> opStack;
+    vector<string> postfix;
     while(tokens.size()){
         string token = tokens[0];
         tokens.erase(tokens.begin());
-        //if(token == "("){
-
-        //}
+        if(token == "("){
+            opStack.insert(opStack.begin(), "(");
+        }else if(token == ")"){
+            while(opStack[0] != "("){
+                 postfix.push_back(opStack[0]);
+                 opStack.erase(opStack.begin());
+            }
+            opStack.erase(opStack.begin());
+        }else if(ops.find(token) != ops.end()){
+            if(opStack.size() == 0){
+                 opStack.insert(opStack.begin(), token);
+                 continue;
+            }
+            while(ops[token] <= ops[opStack[0]]){
+                postfix.push_back(opStack[0]);
+                opStack.erase(opStack.begin());
+                if(opStack.size() == 0) break;
+            }
+            opStack.insert(opStack.begin(), token);
+        }else{
+             postfix.push_back(token);
+        }
     }
-    return tokens;
+    return postfix;
 }
 
 void init(){
