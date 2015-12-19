@@ -3,9 +3,15 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <vector>
+#include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
+#include "lib.h"
 using namespace std;
+using namespace boost;
 
 map<string, int> ops;
+vector<string> parseTree;
 void init();
 
 
@@ -15,7 +21,13 @@ int main(int argc, char const* argv[]){
     ofstream out(argv[2]);
     string line;
     while(getline(in, line)){
-        out<<line<<endl;
+        replace(line, "(", " ( ");
+        replace(line, ")", " ) ");
+        char_separator<char> sp(" ");
+        tokenizer< char_separator<char> > tokens(line, sp);
+        BOOST_FOREACH (const string& t, tokens) {
+            parseTree.push_back(t);
+        }
     }
 
 
