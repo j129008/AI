@@ -183,6 +183,16 @@ for text in fp:
         return ans
 
     parseTree = flattenCNF(parseTree)
+
+    def rmDup(logic):
+        ans = []
+        for term in logic:
+            tmp = tuple(set(term))
+            ans.append(tmp)
+        return list(set(ans))
+
+    parseTree = rmDup(parseTree)
+
     outList = []
     for term in parseTree:
         outList.append( '(' + ' or '.join(term) + ')' )
