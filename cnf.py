@@ -193,9 +193,32 @@ for text in fp:
 
     parseTree = rmDup(parseTree)
 
+    def rmTautologies(logic):
+        ans = []
+        for term in logic :
+            if not isTautology(term) :
+                ans.append(term)
+        return ans
+
+
+    def isTautology(term):
+        for sym in term :
+            op = sym[0]
+            if op == '-' :
+                opposite = sym[1:]
+            else :
+                opposite = '-' + sym
+            if opposite in term :
+                return True
+        return False
+
+    parseTree = rmTautologies(parseTree)
     outList = []
     for term in parseTree:
         outList.append( '(' + ' or '.join(term) + ')' )
     io = ' and '.join(outList)
     io = io.replace('-', 'neg ')
-    fw.writelines(io+'\n\n')
+    if len(outList)==0:
+        fw.writelines('Tautology'+'\n\n')
+    else:
+        fw.writelines(io+'\n\n')
