@@ -1,7 +1,32 @@
 #include <iostream>
+#include <stdio.h>
+#include <fstream>
+#include <string>
+#include <map>
+using namespace std;
 
-int main(int argc, char const* argv[])
-{
-    std::cout << "hello, world!" << std::endl;
+map<string, int> ops;
+void init();
+
+
+int main(int argc, char const* argv[]){
+    init();
+    ifstream in(argv[1]);
+    string line;
+    while(std::getline(in, line)){
+        cout<<line<<endl;
+    }
+
+
     return 0;
+}
+
+void init(){
+    ops["iff"] = 1;
+    ops["imp"] = 2;
+    ops["or"] = 3;
+    ops["and"] = 4;
+    ops["neg"] = 5;
+    ops["("] = 0;
+    ops[")"] = 6;
 }
