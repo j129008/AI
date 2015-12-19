@@ -87,6 +87,10 @@ vector<string> toPostfix(vector<string> tokens){
              postfix.push_back(token);
         }
     }
+    while(opStack.size()>0){
+        postfix.push_back(opStack[0]);
+        opStack.erase(opStack.begin());
+    }
     return postfix;
 }
 
