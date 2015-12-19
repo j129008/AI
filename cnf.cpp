@@ -13,7 +13,7 @@ int main(int argc, char const* argv[]){
     init();
     ifstream in(argv[1]);
     string line;
-    while(std::getline(in, line)){
+    while(getline(in, line)){
         cout<<line<<endl;
     }
 
