@@ -12,9 +12,10 @@ void init();
 int main(int argc, char const* argv[]){
     init();
     ifstream in(argv[1]);
+    ofstream out(argv[2]);
     string line;
     while(getline(in, line)){
-        cout<<line<<endl;
+        out<<line<<endl;
     }
 
 
