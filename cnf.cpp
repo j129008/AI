@@ -85,6 +85,7 @@ struct node{
 node toParseTree(vector<string>);
 node rmIff(node);
 node rmImp(node);
+node rmNeg(node);
 string postfixToInfix(node);
 
 
@@ -108,12 +109,56 @@ int main(int argc, char const* argv[]){
         tree = toParseTree(postfix);
         tree = rmIff(tree);
         tree = rmImp(tree);
+        tree = rmNeg(tree);
         cout<<postfixToInfix(tree)<<endl;
         tree.status();
         getchar();
     }
 
     return 0;
+}
+
+node rmNeg(node logic){
+    node ans;
+    node tree1, tree2;
+    if(logic.isAtom()) ans = logic;
+    else{
+        string op = logic.tail().atom;
+        if(op =="neg"){
+            node arg = logic[0];
+            if(arg.isAtom()){
+                node negArg = arg;
+                negArg.atom = "-" + arg.atom;
+                ans = negArg;
+            }else{
+                string innerOp = arg.tail().atom;
+                if(innerOp=="neg"){
+                    ans = rmNeg(arg[0]);
+                }else{
+                    // demorgan
+                    tree1.push("neg");
+                    tree1.push(arg[0]);
+                    tree2.push("neg");
+                    tree2.push(arg[1]);
+                    tree1 = rmNeg(tree1);
+                    tree2 = rmNeg(tree2);
+                    map<string,string> reverse;
+                    reverse["and"] = "or";
+                    reverse["or"] = "and";
+                    ans.push(reverse[innerOp]);
+                    ans.push(tree2);
+                    ans.push(tree1);
+                }
+            }
+        }else{
+            tree1 = rmNeg(logic[0]);
+            tree2 = rmNeg(logic[1]);
+            ans.push(op);
+            ans.push(tree2);
+            ans.push(tree1);
+        }
+    }
+    return ans;
 }
 
 node rmImp(node logic){
