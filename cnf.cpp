@@ -48,6 +48,15 @@ struct node{
         return child[i];
     }
 
+    bool isAtom(){
+         if(child.size() == 0) return true;
+         else return false;
+    }
+
+    node tail(){
+        return child.back();
+    }
+
     int size(){
          return child.size();
     }
@@ -74,6 +83,7 @@ struct node{
     }
 };
 node toParseTree(vector<string>);
+node rmIff(node);
 
 
 int main(int argc, char const* argv[]){
@@ -90,9 +100,11 @@ int main(int argc, char const* argv[]){
     while(getline(in, line)){
         tree.clear();
         tokens = toToken(line);
+        printVec(tokens);
         postfix = toPostfix(tokens);
         printVec(postfix);
         tree = toParseTree(postfix);
+        tree = rmIff(tree);
         tree.status();
         getchar();
     }
@@ -100,6 +112,42 @@ int main(int argc, char const* argv[]){
     return 0;
 }
 
+node rmIff(node logic){
+    node ans;
+    if(logic.isAtom()) ans = logic;
+    else{
+        string op = logic.tail().atom;
+        if(op =="neg"){
+             node tree = rmIff(logic[0]);
+             ans.push("neg");
+             ans.push(tree);
+        }else{
+            node tree1 = rmIff(logic[0]);
+            node tree2 = rmIff(logic[1]);
+            if(op=="iff"){
+                //ans = [ [rmIff(tree1), rmIff(tree2), 'imp'], [rmIff(tree2), rmIff(tree1), 'imp'], 'and' ]
+                node leftImp;
+                node rightImp;
+                leftImp.push("imp");
+                leftImp.push(rmIff(tree2));
+                leftImp.push(rmIff(tree1));
+
+                rightImp.push("imp");
+                rightImp.push(rmIff(tree1));
+                rightImp.push(rmIff(tree2));
+
+                ans.push("and");
+                ans.push(rightImp);
+                ans.push(leftImp);
+            }else{
+                ans.push(op);
+                ans.push(tree2);
+                ans.push(tree1);
+            }
+        }
+    }
+    return ans;
+}
 node toParseTree(vector<string> postfix){
     node stack;
     string element;
