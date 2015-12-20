@@ -86,6 +86,8 @@ node toParseTree(vector<string>);
 node rmIff(node);
 node rmImp(node);
 node rmNeg(node);
+node distriOr(node, node);
+node doCnf(node);
 string postfixToInfix(node);
 
 
@@ -110,12 +112,50 @@ int main(int argc, char const* argv[]){
         tree = rmIff(tree);
         tree = rmImp(tree);
         tree = rmNeg(tree);
+        tree = doCnf(tree);
         cout<<postfixToInfix(tree)<<endl;
         tree.status();
         getchar();
     }
 
     return 0;
+}
+
+node distriOr(node p1, node p2){
+    node ans;
+    if( (p1.isAtom() == false) && ( p1.tail().atom == "and" ) ){
+        ans.push("and");
+        ans.push(distriOr(p1[1], p2));
+        ans.push(distriOr(p1[0], p2));
+    }else if( (p2.isAtom() == false) && ( p2.tail().atom == "and" ) ){
+        ans.push("and");
+        ans.push(distriOr(p1, p2[1]));
+        ans.push(distriOr(p1, p2[0]));
+    }else{
+        ans.push("or");
+        ans.push(p2);
+        ans.push(p1);
+    }
+    return ans;
+}
+
+node doCnf(node logic){
+    node ans;
+    node tree1, tree2;
+    if(logic.isAtom()) ans = logic;
+    else{
+        string op = logic.tail().atom;
+        tree1 = doCnf(logic[0]);
+        tree2 = doCnf(logic[1]);
+        if( op == "and" ){
+            ans.push("and");
+            ans.push(tree2);
+            ans.push(tree1);
+        }else{
+            ans = distriOr(tree1, tree2);
+        }
+    }
+    return ans;
 }
 
 node rmNeg(node logic){
