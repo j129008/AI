@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <fstream>
 #include <string>
 #include <map>
@@ -18,10 +19,55 @@ void printVec(vector<T>);
 vector<string> toToken(string);
 vector<string> toPostfix(vector<string>);
 
+struct node{
+    string leaf;
+    vector<node> child;
+    void push(node x){
+        child.insert(child.begin(), x);
+    }
+
+    void push(string x){
+        node tmp;
+        tmp.leaf = x;
+        child.insert(child.begin(), tmp);
+    }
+
+    node pop(){
+        node tmp;
+        tmp.leaf = child[0].leaf;
+        tmp.child = child[0].child;
+        child.erase(child.begin());
+        return tmp;
+    }
+
+    node& operator [](int i){
+        return child[i];
+    }
+
+    int size(){
+         return child.size();
+    }
+
+    void status(){
+        cout<<"[";
+        for(int i=0; i<child.size(); i++){
+            if(child[i].size() > 0) cout<<" list ";
+            else cout<<" "<<child[i].leaf<<" ";
+        }
+        cout<<"]"<<endl;
+    }
+
+    void clear(){
+         leaf = "";
+         child.clear();
+    }
+};
+
 
 int main(int argc, char const* argv[]){
     vector<string> tokens;
     vector<string> postfix;
+    node tree;
 
     // file I/O & ops
     init();
@@ -30,9 +76,11 @@ int main(int argc, char const* argv[]){
 
     string line;
     while(getline(in, line)){
+        tree.clear();
         tokens = toToken(line);
         postfix = toPostfix(tokens);
         printVec(postfix);
+        getchar();
     }
 
     return 0;
