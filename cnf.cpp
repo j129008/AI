@@ -144,8 +144,9 @@ node doDisjunc(node logic){
 node rmParen(node logic){
     node ans;
     if(logic.isAtom()){
-        ans.push(logic);
-        ans.push(ans);
+        node tmp;
+        tmp.push(logic);
+        ans.push(tmp);
     }else{
         string op = logic.tail().atom;
         if( op == "or" ){
