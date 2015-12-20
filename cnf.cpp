@@ -53,14 +53,18 @@ struct node{
     }
 
     void status(){
-        if(child.size() == 0) cout<<atom<<endl;
-        else{
+        if(child.size() == 0){
+            if(atom == "")cout<<"null";
+            else cout<<atom<<endl;
+        }else{
             cout<<"[";
             for(int i=0; i<child.size(); i++){
-                if(child[i].size() > 0) cout<<" list ";
+                if(child[i].size() > 0){
+                    child[i].status();
+                }
                 else cout<<" "<<child[i].atom<<" ";
             }
-            cout<<"]"<<endl;
+            cout<<"]";
         }
     }
 
@@ -69,6 +73,7 @@ struct node{
          child.clear();
     }
 };
+node toParseTree(vector<string>);
 
 
 int main(int argc, char const* argv[]){
@@ -87,12 +92,39 @@ int main(int argc, char const* argv[]){
         tokens = toToken(line);
         postfix = toPostfix(tokens);
         printVec(postfix);
-        node test("a");
-        test.status();
+        tree = toParseTree(postfix);
+        tree.status();
         getchar();
     }
 
     return 0;
+}
+
+node toParseTree(vector<string> postfix){
+    node stack;
+    string element;
+    node action;
+    while( postfix.size()>0 ){
+        element = postfix[0];
+        action.clear();
+        postfix.erase(postfix.begin());
+        if( ops.find(element) == ops.end() ){
+            stack.push(element);
+        }else if(element == "neg"){
+            node operand = stack.pop();
+            action.push(element);
+            action.push(operand);
+            stack.push(action);
+        }else{
+            node operand2 = stack.pop();
+            node operand1 = stack.pop();
+            action.push(element);
+            action.push(operand2);
+            action.push(operand1);
+            stack.push(action);
+        }
+    }
+    return stack[0];
 }
 
 template<typename T>
