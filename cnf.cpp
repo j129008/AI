@@ -84,6 +84,7 @@ struct node{
 };
 node toParseTree(vector<string>);
 node rmIff(node);
+node rmImp(node);
 string postfixToInfix(node);
 
 
@@ -106,12 +107,43 @@ int main(int argc, char const* argv[]){
         printVec(postfix);
         tree = toParseTree(postfix);
         tree = rmIff(tree);
+        tree = rmImp(tree);
         cout<<postfixToInfix(tree)<<endl;
         tree.status();
         getchar();
     }
 
     return 0;
+}
+
+node rmImp(node logic){
+    node ans;
+    if(logic.isAtom()) ans = logic;
+    else{
+        string op = logic.tail().atom;
+        if(op =="neg"){
+            node tree = rmImp(logic[0]);
+            ans.push("neg");
+            ans.push(tree);
+        }else{
+            node tree1 = rmImp(logic[0]);
+            node tree2 = rmImp(logic[1]);
+            if(op=="imp"){
+                //ans = [ [tree1, 'neg'], tree2, 'or']
+                node left;
+                left.push("neg");
+                left.push(tree1);
+                ans.push("or");
+                ans.push(tree2);
+                ans.push(left);
+            }else{
+                ans.push(op);
+                ans.push(tree2);
+                ans.push(tree1);
+            }
+        }
+    }
+    return ans;
 }
 
 string postfixToInfix(node logic){
