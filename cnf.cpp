@@ -48,6 +48,13 @@ struct node{
         return child[i];
     }
 
+    node operator+ (node in){
+        node ans;
+        for( int i=0; i<in.size(); i++ ) ans.push(in[i]);
+        for( int i=0; i<child.size(); i++ ) ans.push(child[i]);
+        return ans;
+    }
+
     bool isAtom(){
          if(child.size() == 0) return true;
          else return false;
@@ -88,6 +95,9 @@ node rmImp(node);
 node rmNeg(node);
 node distriOr(node, node);
 node doCnf(node);
+node doDisjunc(node);
+node rmParen(node);
+
 string postfixToInfix(node);
 
 
@@ -114,11 +124,37 @@ int main(int argc, char const* argv[]){
         tree = rmNeg(tree);
         tree = doCnf(tree);
         cout<<postfixToInfix(tree)<<endl;
+        tree = rmParen(tree);
         tree.status();
         getchar();
     }
 
     return 0;
+}
+
+node doDisjunc(node logic){
+    node ans;
+    if(logic.isAtom()) ans.push(logic);
+    else{
+        ans = doDisjunc(logic[0]) + doDisjunc(logic[1]);
+    }
+    return ans;
+}
+
+node rmParen(node logic){
+    node ans;
+    if(logic.isAtom()){
+        ans.push(logic);
+        ans.push(ans);
+    }else{
+        string op = logic.tail().atom;
+        if( op == "or" ){
+            ans.push(doDisjunc(logic[0]) + doDisjunc(logic[1]));
+        }else{
+            ans = rmParen(logic[0]) + rmParen(logic[1]);
+        }
+    }
+    return ans;
 }
 
 node distriOr(node p1, node p2){
