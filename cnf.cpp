@@ -20,21 +20,25 @@ vector<string> toToken(string);
 vector<string> toPostfix(vector<string>);
 
 struct node{
-    string leaf;
+    string atom;
     vector<node> child;
+
+    node(string x){atom = x;};
+    node(){};
+
     void push(node x){
         child.insert(child.begin(), x);
     }
 
     void push(string x){
         node tmp;
-        tmp.leaf = x;
+        tmp.atom = x;
         child.insert(child.begin(), tmp);
     }
 
     node pop(){
         node tmp;
-        tmp.leaf = child[0].leaf;
+        tmp.atom = child[0].atom;
         tmp.child = child[0].child;
         child.erase(child.begin());
         return tmp;
@@ -49,16 +53,19 @@ struct node{
     }
 
     void status(){
-        cout<<"[";
-        for(int i=0; i<child.size(); i++){
-            if(child[i].size() > 0) cout<<" list ";
-            else cout<<" "<<child[i].leaf<<" ";
+        if(child.size() == 0) cout<<atom<<endl;
+        else{
+            cout<<"[";
+            for(int i=0; i<child.size(); i++){
+                if(child[i].size() > 0) cout<<" list ";
+                else cout<<" "<<child[i].atom<<" ";
+            }
+            cout<<"]"<<endl;
         }
-        cout<<"]"<<endl;
     }
 
     void clear(){
-         leaf = "";
+         atom = "";
          child.clear();
     }
 };
@@ -80,6 +87,8 @@ int main(int argc, char const* argv[]){
         tokens = toToken(line);
         postfix = toPostfix(tokens);
         printVec(postfix);
+        node test("a");
+        test.status();
         getchar();
     }
 
