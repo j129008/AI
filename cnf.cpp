@@ -202,6 +202,7 @@ string postfixToInfix(node logic){
             ans = "( " + postfixToInfix(logic[0]) + " " + op + " " + postfixToInfix(logic[1]) + " )";
         }
     }
+    replace(ans, "-", "neg ");
     return ans;
 }
 
