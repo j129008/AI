@@ -65,8 +65,8 @@ for text in fp:
                 tree = rmIff(logic[0])
                 ans = [tree, 'neg']
             else:
-                tree1 = rmImp(logic[0])
-                tree2 = rmImp(logic[1])
+                tree1 = rmIff(logic[0])
+                tree2 = rmIff(logic[1])
                 if op == 'iff':
                     ans = [ [rmIff(tree1), rmIff(tree2), 'imp'], [rmIff(tree2), rmIff(tree1), 'imp'], 'and' ]
                 else:
