@@ -147,6 +147,7 @@ string cnfToStr(node logic){
         if(logic[i].size()>1)token.push_back(")");
         token.push_back(" and ");
     }
+    if(token.size()==0) return ans;
     token.pop_back();
     for(int i=0; i<token.size(); i++){
          ans+=token[i];
