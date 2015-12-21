@@ -5,7 +5,7 @@ fp = open(sys.argv[1], 'r')
 fw = open(sys.argv[2], 'w')
 
 for text in fp:
-    fw.writelines(text)
+    # fw.writelines(text)
     opStack = []
     postfix = []
 
@@ -96,9 +96,9 @@ for text in fp:
         else:
             op = logic[-1]
             if op == 'neg':
-                ans = '( neg ' + postfixToInfix(logic[0]) + ' )'
+                ans = '(neg ' + postfixToInfix(logic[0]) + ')'
             else:
-                ans = '( ' + postfixToInfix(logic[0]) + ' ' + op + ' ' + postfixToInfix(logic[1]) + ' )'
+                ans = '(' + postfixToInfix(logic[0]) + ' ' + op + ' ' + postfixToInfix(logic[1]) + ')'
         return ans
 
     parseTree = rmIff(parseTree)
@@ -215,10 +215,13 @@ for text in fp:
     parseTree = rmTautologies(parseTree)
     outList = []
     for term in parseTree:
-        outList.append( '(' + ' or '.join(term) + ')' )
+        if len(term) == 1:
+            outList.append( ' or '.join(term) )
+        else:
+            outList.append( '(' + ' or '.join(term) + ')' )
     io = ' and '.join(outList)
     io = io.replace('-', 'neg ')
     if len(outList)==0:
-        fw.writelines('Tautology'+'\n\n')
+        fw.writelines('\n\n')
     else:
         fw.writelines(io+'\n\n')
