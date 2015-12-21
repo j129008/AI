@@ -119,17 +119,16 @@ int main(int argc, char const* argv[]){
         postfix = toPostfix(tokens);
         tree = toParseTree(postfix);
         tree = rmIff(tree);
-        cout<<postfixToInfix(tree)<<endl;
+        out<<postfixToInfix(tree)<<endl;
         tree = rmImp(tree);
-        cout<<postfixToInfix(tree)<<endl;
+        out<<postfixToInfix(tree)<<endl;
         tree = rmNeg(tree);
-        cout<<postfixToInfix(tree)<<endl;
+        out<<postfixToInfix(tree)<<endl;
         tree = doCnf(tree);
         tree = rmParen(tree);
         tree = rmDup(tree);
         tree = rmTrue(tree);
-        cout<<cnfToStr(tree)<<endl;
-        getchar();
+        out<<cnfToStr(tree)<<endl<<endl;
     }
 
     return 0;
