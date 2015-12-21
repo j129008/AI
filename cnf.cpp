@@ -156,8 +156,8 @@ string cnfToStr(node logic){
     token.pop_back();
     for(int i=0; i<token.size(); i++){
          ans+=token[i];
-         replace(ans, "-", "neg ");
     }
+    replace(ans, "-", "neg ");
     return ans;
 
 }
