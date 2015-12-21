@@ -167,12 +167,18 @@ node rmDup(node logic){
     node term;
     set<string> sTerm;
     set<string>::iterator it;
+    set < set<string> > sLogic;
+    set < set<string> >::iterator lit;
     for( int i=0; i<logic.size(); i++ ){
         sTerm.clear();
         for( int j=0; j<logic[i].size(); j++ ){
             sTerm.insert(logic[i][j].atom);
         }
+        sLogic.insert(sTerm);
+    }
+    for(lit=sLogic.begin(); lit!=sLogic.end(); lit++){
         term.clear();
+        sTerm=*lit;
         for(it=sTerm.begin(); it!=sTerm.end(); it++){
             term.push(*it);
         }
