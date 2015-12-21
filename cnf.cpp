@@ -103,6 +103,7 @@ bool isTrue(node);
 node rmTrue(node);
 
 string postfixToInfix(node);
+string cnfToStr(node);
 
 
 int main(int argc, char const* argv[]){
@@ -132,13 +133,35 @@ int main(int argc, char const* argv[]){
         tree = rmParen(tree);
         tree = rmDup(tree);
         tree = rmTrue(tree);
-        tree.status();
-        cout<<endl;
+        cout<<cnfToStr(tree)<<endl;
         getchar();
     }
 
     return 0;
 }
+
+string cnfToStr(node logic){
+    string ans;
+    vector<string> token;
+    for(int i=0; i<logic.size(); i++){
+        if(logic[i].size()>1)token.push_back("(");
+        for(int j=0; j<logic[i].size(); j++){
+            token.push_back(logic[i][j].atom);
+            token.push_back(" or ");
+        }
+        token.pop_back();
+        if(logic[i].size()>1)token.push_back(")");
+        token.push_back(" and ");
+    }
+    token.pop_back();
+    for(int i=0; i<token.size(); i++){
+         ans+=token[i];
+         replace(ans, "-", "neg ");
+    }
+    return ans;
+
+}
+
 bool isTrue(node term){
     string op;
     string opposite;
