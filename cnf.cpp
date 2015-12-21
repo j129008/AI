@@ -6,15 +6,13 @@
 #include <map>
 #include <vector>
 #include <set>
-#include <boost/foreach.hpp>
-#include <boost/tokenizer.hpp>
-#include "lib.h"
+#include <sstream>
 using namespace std;
-using namespace boost;
 
 map<string, int> ops;
 void init();
 
+string replace(string&, const string&, const string&);
 vector<string> toToken(string);
 vector<string> toPostfix(vector<string>);
 
@@ -425,11 +423,12 @@ node toParseTree(vector<string> postfix){
 vector<string> toToken(string line){
     replace(line, "(", " ( ");
     replace(line, ")", " ) ");
+    replace(line, "  ", " ");
     vector<string> inputTokens;
-    char_separator<char> sp(" ");
-    tokenizer< char_separator<char> > tokens(line, sp);
-    BOOST_FOREACH (const string& t, tokens) {
-        inputTokens.push_back(t);
+    string token;
+    istringstream iss(line);
+    while(getline(iss, token,' ')){
+        inputTokens.push_back(token);
     }
     return inputTokens;
 }
@@ -478,4 +477,13 @@ void init(){
     ops["neg"] = 5;
     ops["("] = 0;
     ops[")"] = 6;
+}
+
+string replace(string& str, const string& from, const string& to) {
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+    }
+    return str;
 }
