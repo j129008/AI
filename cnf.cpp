@@ -99,6 +99,8 @@ node doCnf(node);
 node doDisjunc(node);
 node rmParen(node);
 node rmDup(node);
+bool isTrue(node);
+node rmTrue(node);
 
 string postfixToInfix(node);
 
@@ -129,10 +131,35 @@ int main(int argc, char const* argv[]){
         tree = rmParen(tree);
         tree = rmDup(tree);
         tree.status();
+        tree = rmTrue(tree);
+        cout<<endl;
+        tree.status();
         getchar();
     }
 
     return 0;
+}
+bool isTrue(node term){
+    string op;
+    string opposite;
+    for(int i=0;i<term.size();i++){
+        string sym = term[i].atom;
+        op = sym[0];
+        if(op == "-") opposite = sym.substr(1, sym.length()-1);
+        else opposite = "-" + sym;
+        for(int j=0;j<term.size();j++){
+            string sym2 = term[j].atom;
+            if(opposite == sym2) return true;
+        }
+    }
+    return false;
+}
+node rmTrue(node logic){
+    node ans;
+    for(int i=0;i<logic.size();i++){
+        if(!isTrue(logic[i])) ans.push(logic[i]);
+    }
+    return ans;
 }
 
 node rmDup(node logic){
