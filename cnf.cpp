@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include "lib.h"
@@ -97,6 +98,7 @@ node distriOr(node, node);
 node doCnf(node);
 node doDisjunc(node);
 node rmParen(node);
+node rmDup(node);
 
 string postfixToInfix(node);
 
@@ -125,11 +127,31 @@ int main(int argc, char const* argv[]){
         tree = doCnf(tree);
         cout<<postfixToInfix(tree)<<endl;
         tree = rmParen(tree);
+        tree = rmDup(tree);
         tree.status();
         getchar();
     }
 
     return 0;
+}
+
+node rmDup(node logic){
+    node ans;
+    node term;
+    set<string> sTerm;
+    set<string>::iterator it;
+    for( int i=0; i<logic.size(); i++ ){
+        sTerm.clear();
+        for( int j=0; j<logic[i].size(); j++ ){
+            sTerm.insert(logic[i][j].atom);
+        }
+        term.clear();
+        for(it=sTerm.begin(); it!=sTerm.end(); it++){
+            term.push(*it);
+        }
+        ans.push(term);
+    }
+    return ans;
 }
 
 node doDisjunc(node logic){
