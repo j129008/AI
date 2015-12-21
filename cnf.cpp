@@ -121,19 +121,19 @@ int main(int argc, char const* argv[]){
         tokens = toToken(line);
         printVec(tokens);
         postfix = toPostfix(tokens);
-        printVec(postfix);
         tree = toParseTree(postfix);
         tree = rmIff(tree);
-        tree = rmImp(tree);
-        tree = rmNeg(tree);
-        tree = doCnf(tree);
         cout<<postfixToInfix(tree)<<endl;
+        tree = rmImp(tree);
+        cout<<postfixToInfix(tree)<<endl;
+        tree = rmNeg(tree);
+        cout<<postfixToInfix(tree)<<endl;
+        tree = doCnf(tree);
         tree = rmParen(tree);
         tree = rmDup(tree);
-        tree.status();
         tree = rmTrue(tree);
-        cout<<endl;
         tree.status();
+        cout<<endl;
         getchar();
     }
 
@@ -329,9 +329,9 @@ string postfixToInfix(node logic){
     else{
         string op = logic.tail().atom;
         if(op=="neg"){
-            ans = "( neg " + postfixToInfix(logic[0]) + " )";
+            ans = "(neg " + postfixToInfix(logic[0]) + ")";
         }else{
-            ans = "( " + postfixToInfix(logic[0]) + " " + op + " " + postfixToInfix(logic[1]) + " )";
+            ans = "(" + postfixToInfix(logic[0]) + " " + op + " " + postfixToInfix(logic[1]) + ")";
         }
     }
     replace(ans, "-", "neg ");
