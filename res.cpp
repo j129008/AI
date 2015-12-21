@@ -18,6 +18,7 @@ vector<string> toPostfix(vector<string>);
 
 struct node{
     string atom;
+    string tag;
     vector<node> child;
 
     node(string x){atom = x;};
@@ -116,19 +117,22 @@ int main(int argc, char const* argv[]){
     while(getline(in, line)){
         tree.clear();
         tokens = toToken(line);
+        cout<<line<<endl;
+
+        tree.tag = tokens[0];
+        replace(tree.tag,":","");
+        tokens.erase(tokens.begin());
+
         postfix = toPostfix(tokens);
         tree = toParseTree(postfix);
         tree = rmIff(tree);
-        out<<postfixToInfix(tree)<<endl;
         tree = rmImp(tree);
-        out<<postfixToInfix(tree)<<endl;
         tree = rmNeg(tree);
-        out<<postfixToInfix(tree)<<endl;
         tree = doCnf(tree);
         tree = rmParen(tree);
         tree = rmDup(tree);
         tree = rmTrue(tree);
-        out<<cnfToStr(tree)<<endl<<endl;
+        cout<<cnfToStr(tree)<<endl<<endl;
     }
 
     return 0;
