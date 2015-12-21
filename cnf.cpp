@@ -15,8 +15,6 @@ using namespace boost;
 map<string, int> ops;
 void init();
 
-template<typename T>
-void printVec(vector<T>);
 vector<string> toToken(string);
 vector<string> toPostfix(vector<string>);
 
@@ -120,7 +118,6 @@ int main(int argc, char const* argv[]){
     while(getline(in, line)){
         tree.clear();
         tokens = toToken(line);
-        printVec(tokens);
         postfix = toPostfix(tokens);
         tree = toParseTree(postfix);
         tree = rmIff(tree);
@@ -424,13 +421,6 @@ node toParseTree(vector<string> postfix){
     return stack[0];
 }
 
-template<typename T>
-void printVec(vector<T> vec){
-    BOOST_FOREACH (const T& ele, vec) {
-        cout<<ele<<" ";
-    }
-    cout<<endl;
-}
 
 vector<string> toToken(string line){
     replace(line, "(", " ( ");
