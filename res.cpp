@@ -112,6 +112,7 @@ int main(int argc, char const* argv[]){
     node tree;
     string tag;
     static map<string, node> tagMap;
+    static map<string, node> resMap;
 
     // file I/O & ops
     init();
@@ -139,6 +140,30 @@ int main(int argc, char const* argv[]){
         tagFacts(tagMap, tree, tag);
     }
     for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
+        cout<<(*i).first;
+        (*i).second.status();
+        cout<<endl;
+    }
+    cout<<"=========================="<<endl;
+    node newTerm;
+    int newFact=0;
+    for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
+        for(int j=0;j<(*i).second.size();j++){
+            string revSym=reverse((*i).second[j].atom);
+            map<string,node>::iterator k=i;
+            k++;
+            for(; k!=tagMap.end();k++){
+                for(int l=0;l<(*k).second.size();l++){
+                    if((*k).second[l].atom==revSym){
+                        newTerm = (*k).second;
+                        newTerm.child.erase(newTerm.child.begin()+l);
+                        resMap["R"+intToStr(1000+(++newFact))+": "] = newTerm;
+                    }
+                }
+            }
+        }
+    }
+    for(map<string,node>::iterator i=resMap.begin(); i!=resMap.end();i++){
         cout<<(*i).first;
         (*i).second.status();
         cout<<endl;
