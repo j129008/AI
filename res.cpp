@@ -100,6 +100,7 @@ node rmDup(node);
 bool isTrue(node);
 node rmTrue(node);
 void tagFacts(map<string,node>&, node, string);
+string reverse(string);
 
 string postfixToInfix(node);
 string cnfToStr(node);
@@ -146,12 +147,17 @@ int main(int argc, char const* argv[]){
     return 0;
 }
 
+string reverse(string element){
+    string neg = "-";
+    if(element[0] == neg[0]) replace(element,"-","");
+    else element = "-" + element;
+    return element;
+}
+
 void tagFacts(map<string, node> &tagMap, node tree, string tag){
     for(int i=0; i<tree.size();i++){ if(tree.size()==1){
         if(tag == "X"){
-            string neg = "-";
-            if(tree[i][0].atom[0] == neg[0]) replace(tree[i][0].atom ,"-", "");
-            else tree[i][0].atom ="-"+tree[i][0].atom;
+            tree[i][0].atom = reverse(tree[i][0].atom);
             tagMap["XX: "] = tree[i];
         }else tagMap[tag+": "] = tree[i];
     }else
