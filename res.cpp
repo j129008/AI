@@ -105,6 +105,7 @@ bool doReso(node left, node right, node& out, string& del);
 
 string postfixToInfix(node);
 string cnfToStr(node);
+string termToStr(node);
 
 
 int main(int argc, char const* argv[]){
@@ -141,9 +142,8 @@ int main(int argc, char const* argv[]){
         tagFacts(tagMap, tree, tag);
     }
     for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
-        cout<<(*i).first;
-        (*i).second.status();
-        cout<<endl;
+        cout<<(*i).first<<": ";
+        cout<<termToStr((*i).second)<<endl;
     }
     cout<<"=========================="<<endl;
     node newTerm;
@@ -166,6 +166,21 @@ int main(int argc, char const* argv[]){
 end:
 
     return 0;
+}
+
+string termToStr(node term){
+    vector<string> ans;
+    string ansStr;
+    for(int i=0;i<term.size();i++){
+        ans.push_back(term[i].atom);
+        ans.push_back(" or ");
+    }
+    ans.pop_back();
+    for(int i=0;i<ans.size();i++){
+         ansStr+=ans[i];
+    }
+    replace(ansStr,"-","neg ");
+    return ansStr;
 }
 
 bool doReso(node left, node right, node& out, string& del){
@@ -206,10 +221,10 @@ void tagFacts(map<string, node> &tagMap, node tree, string tag){
     for(int i=0; i<tree.size();i++){ if(tree.size()==1){
         if(tag == "X"){
             tree[i][0].atom = reverse(tree[i][0].atom);
-            tagMap["XX: "] = tree[i];
-        }else tagMap[tag+": "] = tree[i];
+            tagMap["XX"] = tree[i];
+        }else tagMap[tag] = tree[i];
     }else
-        tagMap[tag+intToStr(i+1)+": "] = tree[i];
+        tagMap[tag+intToStr(i+1)] = tree[i];
     }
 }
 
