@@ -13,6 +13,7 @@ map<string, int> ops;
 void init();
 
 string replace(string&, const string&, const string&);
+string intToStr (int);
 vector<string> toToken(string);
 vector<string> toPostfix(vector<string>);
 
@@ -107,6 +108,8 @@ int main(int argc, char const* argv[]){
     vector<string> tokens;
     vector<string> postfix;
     node tree;
+    string tag;
+    map<string, node> tagMap;
 
     // file I/O & ops
     init();
@@ -117,10 +120,9 @@ int main(int argc, char const* argv[]){
     while(getline(in, line)){
         tree.clear();
         tokens = toToken(line);
-        cout<<line<<endl;
 
-        tree.tag = tokens[0];
-        replace(tree.tag,":","");
+        tag = tokens[0];
+        replace(tag,":","");
         tokens.erase(tokens.begin());
 
         postfix = toPostfix(tokens);
@@ -132,10 +134,27 @@ int main(int argc, char const* argv[]){
         tree = rmParen(tree);
         tree = rmDup(tree);
         tree = rmTrue(tree);
-        cout<<cnfToStr(tree)<<endl<<endl;
+        for(int i=0; i<tree.size();i++){
+            if(tree.size()==1)
+                tagMap[tag+": "] = tree[i];
+            else
+                tagMap[tag+intToStr(i+1)+": "] = tree[i];
+        }
+        //cout<<cnfToStr(tree)<<endl<<endl;
+    }
+    for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
+        cout<<(*i).first;
+        (*i).second.status();
+        cout<<endl;
     }
 
     return 0;
+}
+
+string intToStr ( int Number ){
+    ostringstream ss;
+    ss << Number;
+    return ss.str();
 }
 
 string cnfToStr(node logic){
