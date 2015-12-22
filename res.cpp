@@ -99,6 +99,7 @@ node rmParen(node);
 node rmDup(node);
 bool isTrue(node);
 node rmTrue(node);
+void tagFacts(map<string,node>&, node, string);
 
 string postfixToInfix(node);
 string cnfToStr(node);
@@ -109,7 +110,7 @@ int main(int argc, char const* argv[]){
     vector<string> postfix;
     node tree;
     string tag;
-    map<string, node> tagMap;
+    static map<string, node> tagMap;
 
     // file I/O & ops
     init();
@@ -134,18 +135,7 @@ int main(int argc, char const* argv[]){
         tree = rmParen(tree);
         tree = rmDup(tree);
         tree = rmTrue(tree);
-        for(int i=0; i<tree.size();i++){
-            if(tree.size()==1){
-                if(tag == "X"){
-                    string neg = "-";
-                    if(tree[i][0].atom[0] == neg[0]) replace(tree[i][0].atom ,"-", "");
-                    else tree[i][0].atom ="-"+tree[i][0].atom;
-                    tagMap["XX: "] = tree[i];
-                }else tagMap[tag+": "] = tree[i];
-            }else
-                tagMap[tag+intToStr(i+1)+": "] = tree[i];
-        }
-        //cout<<cnfToStr(tree)<<endl<<endl;
+        tagFacts(tagMap, tree, tag);
     }
     for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
         cout<<(*i).first;
@@ -154,6 +144,19 @@ int main(int argc, char const* argv[]){
     }
 
     return 0;
+}
+
+void tagFacts(map<string, node> &tagMap, node tree, string tag){
+    for(int i=0; i<tree.size();i++){ if(tree.size()==1){
+        if(tag == "X"){
+            string neg = "-";
+            if(tree[i][0].atom[0] == neg[0]) replace(tree[i][0].atom ,"-", "");
+            else tree[i][0].atom ="-"+tree[i][0].atom;
+            tagMap["XX: "] = tree[i];
+        }else tagMap[tag+": "] = tree[i];
+    }else
+        tagMap[tag+intToStr(i+1)+": "] = tree[i];
+    }
 }
 
 string intToStr ( int Number ){
