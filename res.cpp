@@ -154,6 +154,7 @@ int main(int argc, char const* argv[]){
             string del;
             if( doReso((*i).second, (*k).second, out, del) ){
                 cout<<(*i).first<<" "<<(*k).first<<" del: "<<del<<endl;
+                tagMap["R"+intToStr(1000+ (newFact++))+": "] = out;
                 out.status();
                 cout<<endl;
             }
