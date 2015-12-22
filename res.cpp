@@ -101,6 +101,7 @@ bool isTrue(node);
 node rmTrue(node);
 void tagFacts(map<string,node>&, node, string);
 string reverse(string);
+bool doReso(node left, node right, node& out, string& del);
 
 string postfixToInfix(node);
 string cnfToStr(node);
@@ -148,28 +149,48 @@ int main(int argc, char const* argv[]){
     node newTerm;
     int newFact=0;
     for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
-        for(int j=0;j<(*i).second.size();j++){
-            string revSym=reverse((*i).second[j].atom);
-            map<string,node>::iterator k=i;
-            k++;
-            for(; k!=tagMap.end();k++){
-                for(int l=0;l<(*k).second.size();l++){
-                    if((*k).second[l].atom==revSym){
-                        newTerm = (*k).second;
-                        newTerm.child.erase(newTerm.child.begin()+l);
-                        resMap["R"+intToStr(1000+(++newFact))+": "] = newTerm;
-                    }
-                }
+        for(map<string,node>::iterator k=i; k!=tagMap.end();k++){
+            node out;
+            string del;
+            if( doReso((*i).second, (*k).second, out, del) ){
+                cout<<(*i).first<<" "<<(*k).first<<" del: "<<del<<endl;
+                out.status();
+                cout<<endl;
             }
         }
     }
-    for(map<string,node>::iterator i=resMap.begin(); i!=resMap.end();i++){
+    cout<<"=========================="<<endl;
+    for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
         cout<<(*i).first;
         (*i).second.status();
         cout<<endl;
     }
 
     return 0;
+}
+
+bool doReso(node left, node right, node& out, string& del){
+    for(int i=0;i<left.size(); i++){
+        for(int j=0;j<right.size();j++){
+            if(left[i].atom == reverse(right[j].atom)){
+                del = left[i].atom;
+                left.child.erase(left.child.begin()+i);
+                right.child.erase(right.child.begin()+j);
+                out = left + right;
+                set<string> tmpSet;
+                set<string>::iterator it;
+                for(int i=0; i<out.size(); i++){
+                    tmpSet.insert(out[i].atom);
+                }
+                out.clear();
+                for(it=tmpSet.begin();it!=tmpSet.end();it++){
+                    out.push(*it);
+                }
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 string reverse(string element){
