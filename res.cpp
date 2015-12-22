@@ -119,7 +119,7 @@ int main(int argc, char const* argv[]){
     // file I/O & ops
     init();
     ifstream in(argv[1]);
-    ofstream out(argv[2]);
+    ofstream outputFile(argv[2]);
 
     string line;
     while(getline(in, line)){
@@ -142,10 +142,10 @@ int main(int argc, char const* argv[]){
         tagFacts(tagMap, tree, tag);
     }
     for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
-        cout<<(*i).first<<": ";
-        cout<<termToStr((*i).second)<<endl;
+        outputFile<<(*i).first<<": ";
+        outputFile<<termToStr((*i).second)<<endl;
     }
-    cout<<"=========================="<<endl;
+    outputFile<<"=========================="<<endl;
     node newTerm;
     int newFact=0;
     while(1){
@@ -155,12 +155,12 @@ int main(int argc, char const* argv[]){
                 string del;
                 if( doReso((*i).second, (*k).second, out, del) ){
                     replace(del,"-","neg ");
-                    cout<<(*i).first<<" + "<<(*k).first<<" (cancel "<<del<<")"<<endl;
-                    cout<<"得到"<<endl;
+                    outputFile<<(*i).first<<" + "<<(*k).first<<" (cancel "<<del<<")"<<endl;
+                    outputFile<<"得到"<<endl;
                     tagMap["R"+intToStr(1000+ (newFact++))] = out;
-                    cout<<termToStr(out)<<endl;
+                    outputFile<<termToStr(out)<<endl;
                     if(out.size()==0) goto end;
-                    cout<<endl;
+                    outputFile<<endl;
                 }
             }
         }
