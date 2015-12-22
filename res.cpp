@@ -157,24 +157,20 @@ int main(int argc, char const* argv[]){
                     cout<<(*i).first<<" "<<(*k).first<<" del: "<<del<<endl;
                     tagMap["R"+intToStr(1000+ (newFact++))+": "] = out;
                     out.status();
+                    if(out.size()==0) goto end;
                     cout<<endl;
                 }
             }
         }
-
-        cout<<"=========================="<<endl;
-        for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
-            cout<<(*i).first;
-            (*i).second.status();
-            cout<<endl;
-        }
-        getchar();
     }
+end:
 
     return 0;
 }
 
 bool doReso(node left, node right, node& out, string& del){
+    int maxLen = left.size();
+    if(right.size()>maxLen) maxLen = right.size();
     for(int i=0;i<left.size(); i++){
         for(int j=0;j<right.size();j++){
             if(left[i].atom == reverse(right[j].atom)){
@@ -182,6 +178,7 @@ bool doReso(node left, node right, node& out, string& del){
                 left.child.erase(left.child.begin()+i);
                 right.child.erase(right.child.begin()+j);
                 out = left + right;
+                if(out.size()>=maxLen) return false;
                 set<string> tmpSet;
                 set<string>::iterator it;
                 for(int i=0; i<out.size(); i++){
