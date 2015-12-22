@@ -148,23 +148,27 @@ int main(int argc, char const* argv[]){
     cout<<"=========================="<<endl;
     node newTerm;
     int newFact=0;
-    for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
-        for(map<string,node>::iterator k=i; k!=tagMap.end();k++){
-            node out;
-            string del;
-            if( doReso((*i).second, (*k).second, out, del) ){
-                cout<<(*i).first<<" "<<(*k).first<<" del: "<<del<<endl;
-                tagMap["R"+intToStr(1000+ (newFact++))+": "] = out;
-                out.status();
-                cout<<endl;
+    while(1){
+        for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
+            for(map<string,node>::iterator k=i; k!=tagMap.end();k++){
+                node out;
+                string del;
+                if( doReso((*i).second, (*k).second, out, del) ){
+                    cout<<(*i).first<<" "<<(*k).first<<" del: "<<del<<endl;
+                    tagMap["R"+intToStr(1000+ (newFact++))+": "] = out;
+                    out.status();
+                    cout<<endl;
+                }
             }
         }
-    }
-    cout<<"=========================="<<endl;
-    for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
-        cout<<(*i).first;
-        (*i).second.status();
-        cout<<endl;
+
+        cout<<"=========================="<<endl;
+        for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
+            cout<<(*i).first;
+            (*i).second.status();
+            cout<<endl;
+        }
+        getchar();
     }
 
     return 0;
