@@ -54,6 +54,19 @@ struct node{
         return ans;
     }
 
+    bool operator== (node in){
+        set<string> tmpSet1;
+        set<string> tmpSet2;
+        for(int i=0;i<child.size();i++){
+            tmpSet1.insert(child[i].atom);
+        }
+        for(int i=0;i<in.size();i++){
+            tmpSet2.insert(in[i].atom);
+        }
+        if(tmpSet1 == tmpSet2) return true;
+        else return false;
+    }
+
     bool isAtom(){
          if(child.size() == 0) return true;
          else return false;
@@ -106,6 +119,7 @@ bool doReso(node left, node right, node& out, string& del);
 string postfixToInfix(node);
 string cnfToStr(node);
 string termToStr(node);
+string findMapTerm(map<string, node> someMap, node term);
 
 
 int main(int argc, char const* argv[]){
@@ -148,12 +162,15 @@ int main(int argc, char const* argv[]){
     outputFile<<"=========================="<<endl;
     node newTerm;
     int newFact=0;
+    int mapSize1=0, mapSize2=0;
     while(1){
+        mapSize1 = tagMap.size();
         for(map<string,node>::iterator i=tagMap.begin(); i!=tagMap.end();i++){
             for(map<string,node>::iterator k=i; k!=tagMap.end();k++){
                 node out;
                 string del;
                 if( doReso((*i).second, (*k).second, out, del) ){
+                    if(findMapTerm(tagMap, out)!="") continue;
                     replace(del,"-","neg ");
                     outputFile<<(*i).first<<" + "<<(*k).first<<" (cancel "<<del<<")"<<endl;
                     outputFile<<"得到"<<endl;
@@ -164,10 +181,19 @@ int main(int argc, char const* argv[]){
                 }
             }
         }
+        mapSize2 = tagMap.size();
+        if(mapSize1 == mapSize2) goto end;
     }
 end:
-
     return 0;
+}
+
+string findMapTerm(map<string, node> someMap, node term){
+    string ans = "";
+    for (map<string, node>::iterator it = someMap.begin(); it != someMap.end(); ++it )
+        if ((*it).second == term)
+            return (*it).first;
+    return ans;
 }
 
 string termToStr(node term){
