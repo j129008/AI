@@ -154,9 +154,11 @@ int main(int argc, char const* argv[]){
                 node out;
                 string del;
                 if( doReso((*i).second, (*k).second, out, del) ){
-                    cout<<(*i).first<<" "<<(*k).first<<" del: "<<del<<endl;
-                    tagMap["R"+intToStr(1000+ (newFact++))+": "] = out;
-                    out.status();
+                    replace(del,"-","neg ");
+                    cout<<(*i).first<<" + "<<(*k).first<<" (cancel "<<del<<")"<<endl;
+                    cout<<"得到"<<endl;
+                    tagMap["R"+intToStr(1000+ (newFact++))] = out;
+                    cout<<termToStr(out)<<endl;
                     if(out.size()==0) goto end;
                     cout<<endl;
                 }
@@ -169,6 +171,7 @@ end:
 }
 
 string termToStr(node term){
+    if(term.size()==0) return "空集合";
     vector<string> ans;
     string ansStr;
     for(int i=0;i<term.size();i++){
