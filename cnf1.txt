@@ -1,0 +1,19 @@
+A or neg A
+A
+neg (neg A)
+A or B
+A and B
+A imp B
+neg (A iff B)
+A or neg B
+A and neg B
+A imp neg B
+A iff neg B
+neg A or B
+neg A and B
+neg A imp B
+A iff B
+A and A
+A and neg A
+A or A
+A imp A

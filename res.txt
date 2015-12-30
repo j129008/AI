@@ -1,0 +1,9 @@
+R1: B31 imp B21 and B32 and B41
+R2: B21 imp P11 or P22 or P31
+R3: P22 imp B21 and B23 and B12 and B32
+R4: B12 imp P11 or P22 or P13
+R5: neg B11
+R6: B21
+R7: neg B12
+R8: neg P11
+X: P31
