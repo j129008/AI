@@ -2,8 +2,8 @@
 本程式碼使用 WTFPL (Do What the Fuck You Want to Public License)
 
 ```sh
-$ g++ cnf.cpp -O cnf
-$ g++ res.cpp -O res
+$ g++ cnf.cpp -o cnf
+$ g++ res.cpp -o res
 $ ./cnf [input file name] [output file name]
 $ ./res [input file name] [output file name]
 ```
