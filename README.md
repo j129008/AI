@@ -24,7 +24,7 @@ rule1: B or neg A
 rule2: A or neg B
 rule3: neg A
 ```
-以上範例無法合併爲空集合，A 不能推定爲真
+以上範例無法合併爲空集合，不能推定 A 爲真
 
 
 
