@@ -1,6 +1,4 @@
-# How to run this program
-本程式碼使用 WTFPL (Do What the Fuck You Want to Public License)
-
+# Conjunctive Normal Form and Resolution
 
 ### Introduction
 將布林邏輯轉換成 Conjunctive Normal Form (CNF) 的形式，再進行推論 (Resolution)，範例如下。
